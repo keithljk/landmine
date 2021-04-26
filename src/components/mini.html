@@ -1,0 +1,25 @@
+<div class="game">
+    <div class="timer">
+        <span v-model="timer" v-html="timer"></span>
+        <span>地雷總數 : {{miniCount}}</span>
+    </div>
+    <div class="boom" v-if="boom">
+        <img src="@/assets/boom.jpg" @click="restart()">
+    </div>
+    <div class="win" v-if="win">
+        <img src="@/assets/win.jpg" @click="restart()">
+    </div>
+    <div class="content" v-else>
+        <div class="row" v-for="(items, indexs) in dataAry">
+            <div class="col btn" v-for="(item, key, index) in items" 
+                @click="clickResult(item.x,item.y)" 
+                @contextmenu.prevent="flag(item.x,item.y)" 
+                :key="key" 
+                >
+                
+                <img src="@/assets/flag.jpg" height="28" width="28" v-if="item.z=='p'">
+                <span v-else>{{item.z}}</span>
+            </div>
+        </div>
+    </div>
+</div>
