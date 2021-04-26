@@ -1,5 +1,8 @@
 # mini-game
 
+## 說明
+為了練習Vue Cli 所寫的一個簡單踩地雷
+
 ## Project setup
 ```
 npm install
