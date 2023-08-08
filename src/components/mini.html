@@ -11,13 +11,16 @@
     </div>
     <div class="content" v-else>
         <div class="row" v-for="(items, indexs) in dataAry">
-            <div class="col btn" v-for="(item, key, index) in items" 
+            <div
+                class="col btn"
+                :class="{opened: item.z == '', openNum: !isNaN(parseInt(item.z))}"
+                v-for="(item, key, index) in items" 
                 @click="clickResult(item.x,item.y)" 
                 @contextmenu.prevent="flag(item.x,item.y)" 
                 :key="key" 
                 >
                 
-                <img src="@/assets/flag.jpg" height="28" width="28" v-if="item.z=='p'">
+                <img src="@/assets/flag.png" height="28" width="28" v-if="item.z=='p'">
                 <span v-else>{{item.z}}</span>
             </div>
         </div>

@@ -60,7 +60,7 @@ export default {
           if(obj.row + i > -1 && obj.row + i < 9){
             for(let j=-1; j<2; j++){
               if(!(i==0 && j==0)){
-                obj.col + j > -1 && obj.col + j < 9 ? this.numAry.push({x: obj.row + i,y: obj.col + j,z: 0}) : console.log((obj.row + i)+','+(obj.col + j))
+                (obj.col + j > -1 && obj.col + j < 9) && this.numAry.push({x: obj.row + i,y: obj.col + j,z: 0})
               }
             }
           }
@@ -84,38 +84,46 @@ export default {
       if(this.timer == 0){
         this.timeStart = setInterval(this.plusTimer, 1000)
       }
-        let miniIndex = this.miniAry.findIndex(obj => obj.row == row && obj.col == col)
-        let index = this.numAry.findIndex(obj => obj.x == row && obj.y == col) 
 
-        if(miniIndex != -1){
-          if(this.dataAry[row][col].z != 'p'){
-            this.stopTimer()
-            this.dataAry[row].splice(col,1,{x: row,y: col,z: 'X'})
-            this.boom = true
+      this.dataAry[row][col].z = ''
+      let miniIndex = this.miniAry.findIndex(obj => obj.row == row && obj.col == col)
+      let index = this.numAry.findIndex(obj => obj.x == row && obj.y == col) 
+
+      if(miniIndex != -1){
+        if(this.dataAry[row][col].z != 'p'){
+          this.stopTimer()
+          this.dataAry[row].splice(col,1,{x: row,y: col,z: 'X'})
+          this.boom = true
+        }
+      }else{
+        if(index == -1){
+          if(this.spaceAryFinish.findIndex(obj => obj.x == row && obj.y == col) == -1){
+            this.spaceAry.push({x: row,y: col})
+            do {
+              this.openSpace(this.spaceAry[this.spaceAry.length-1].x,this.spaceAry[this.spaceAry.length-1].y)
+            } while (this.spaceAry.length > 0);
           }
         }else{
-          if(index == -1){
-            if(this.spaceAryFinish.findIndex(obj => obj.x == row && obj.y == col) == -1){
-              this.spaceAry.push({x: row,y: col})
-              do {
-                this.openSpace(this.spaceAry[this.spaceAry.length-1].x,this.spaceAry[this.spaceAry.length-1].y)
-              } while (this.spaceAry.length > 0);
-            }
-          }else{
-            this.dataAry[row].splice(col,1,{x: row,y: col,z: String(this.numAry[index].z)})
-          }
+          this.dataAry[row].splice(col,1,{x: row,y: col,z: String(this.numAry[index].z)})
         }
+      }
     },
     openSpace(row,col){
       let removeObj = this.spaceAry.pop()
       this.spaceAryFinish.push({x: removeObj.x,y: removeObj.y})
+
       for(let i=-1; i<2; i++){
         if(row + i > -1 && row + i < 9){
           for(let j=-1; j<2; j++){
             if(col + j > -1 && col + j < 9){
               if (this.spaceAryFinish.findIndex(obj => obj.x == row + i && obj.y == col + j) == -1){
                 let index = this.numAry.findIndex(obj => obj.x == row + i && obj.y == col + j)
-                index == -1 ? this.spaceAry.push({x: row + i,y: col + j}) : this.dataAry[row + i].splice(col + j,1,{x: row + i,y: col + j,z: String(this.numAry[index].z)})
+                if(index == -1){
+                  this.spaceAry.push({x: row + i,y: col + j})
+                  this.dataAry[row + i][col + j].z = ''
+                }else{
+                  this.dataAry[row + i].splice(col + j,1,{x: row + i,y: col + j,z: String(this.numAry[index].z)})
+                }
               }
             }
           }
@@ -147,10 +155,9 @@ export default {
           }
         }
       }
-      console.log(lb_notYet)
+
       if(!lb_notYet){
         this.stopTimer()
-        console.log("WIN")
         this.win = true
       }
     },
@@ -190,31 +197,47 @@ export default {
   position: relative
 }
 .boom{
-  display: flex;
-  justify-content: space-around;
+  /* display: flex;
+  justify-content: space-around; */
+  position: fixed;
+  top: 0;
+  left: calc(50% - 500px);
 }
 .win{
-  display: flex;
-  justify-content: space-around;
+  /* display: flex;
+  justify-content: space-around; */
+  position: fixed;
+  top: 0;
+  left: calc(50% - 500px);
 }
 .content{
-  display: flex;
-  justify-content: space-around;
-  border-top: 1px solid #bbb;
-  border-left: 1px solid #bbb;
+  /* display: flex; */
+  display: inline-flex;
+  /* justify-content: space-around; */
+  border-top: 1px solid #aaa;
+  border-left: 1px solid #aaa;
 }
 .row{
-  flex: auto;
+  /* flex: auto; */
   width: 100%;
 }
 .col{
-  border-right: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
+  border-right: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
   line-height: 30px;
   height: 30px;
+  width: 30px;
+  background-color: #eee;
 }
 .btn{
-  box-shadow: white 0 0px 1px, black 1px 0px 2px, white -1px 0px 2px;
+  /* box-shadow: white 0 0px 1px, black 1px 0px 2px, white -1px 0px 2px; */
+  box-shadow: 1px 1px 5px black;
   cursor: pointer;
+}
+.opened {
+  background-color: #bbbbbbaa;
+}
+.openNum {
+  background-color: #bbbbbb;
 }
 </style>
